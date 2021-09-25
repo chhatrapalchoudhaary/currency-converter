@@ -1,27 +1,68 @@
 import styled from 'styled-components';
 import { useState,useEffect } from 'react';
 import { FcGoogle } from "react-icons/fc";
-import { useLocalStorage } from "../features/user/useLocalStorage";
+import Login from '../components/Login'
+
 
 
 const Signup = (props) =>{
-    const [email, setEmail] = useLocalStorage("email", "");
+   
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [flag, setFlag] = useState(false);
+    const [login, setLogin] = useState(true);
+    const [info, setInfo] = useState(true);
 
-      
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
 
-    // const whenSignup = ()=>{
+        if (!name || !email || !password) {
+            setFlag(true);
 
-    //     const history= props;
-    //     history.push("/login");
+        } else {
+            setFlag(false);
+            localStorage.setItem("SubmissionEmail", JSON.stringify(email));
+            localStorage.setItem("SubmissionPassword", JSON.stringify(password));
+            console.log("Saved in Local Storage");
 
-    // }    
+            setLogin(!login)
+
+        }
+
+    }
+
+    // Directly to the login page
+    const handleClick = () => {
+        setLogin(!login)
+    }
+
+    // Company Info
+    const infoClick = ()=> {
+        setInfo(!info)
+    }
+
+
+
     return(
         <Container>
         <SignupCard>
             <Wrapper>
-                <Form>
-                    <Heading>Welcome to Currency Conversion App!</Heading>
-                    <SubHeading>Already Registered?<a href="/login"><Span>SignIn</Span></a></SubHeading>
+            
+            {login ?<div>
+            <Heading>Welcome to Currency Conversion App!</Heading>
+            <SubHeading>Already Registered?<p onClick={handleClick}><Span>SignIn</Span></p></SubHeading>
+                <Form onSubmit={handleFormSubmit}>
+                    
+                    <Input
+                        type="text"
+                        name="text"
+                        placeholder="Enter Name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        
+                    />
+
                     <Input
                         type="email"
                         name="email"
@@ -30,11 +71,22 @@ const Signup = (props) =>{
                         onChange={(e) => setEmail(e.target.value)}
                         
                     />
-                
+                    <Input
+                        type="password"
+                        name="password"
+                        placeholder="Enter Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        
+                    />
                     <Button>Signup</Button>
                     <SubHeading>Or Login With</SubHeading>
-                    
-                </Form>
+                    {flag &&
+                    <Error>
+                        I got it you are in hurry! But every Field is important!
+                    </Error>
+                }
+                </Form></div> : <Login/>}
                 <GoogleLogin>
                         <FcGoogle/>
                     </GoogleLogin>
@@ -149,6 +201,11 @@ const Button = styled.button`
     background: rgb(200, 50, 70);
     animation: all 0.2s ease-out forwards;
   }
+`;
+
+const Error = styled.p`
+ font-size: 14px;
+ color: red;
 `;
 
 const GoogleLogin = styled.button`

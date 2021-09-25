@@ -7,7 +7,7 @@ const Home = (props) =>{
             
             <MainHeadingSection>
                 <Heading>Convert Currencies in Seconds</Heading>
-                <Link to="/login">
+                <Link to="/signup">
                 <LoginButton> Login to Convert</LoginButton>
                 </Link>
             </MainHeadingSection>
@@ -33,6 +33,7 @@ top: 102px;
 padding: 0 calc(3.5vw + 15px);
 
 
+
 &:after{
     background-color: #f5f5f5;
     content: ' ';
@@ -41,17 +42,38 @@ padding: 0 calc(3.5vw + 15px);
     opacity: 1;
     z-index:-1;
 }
+
+
+@media(max-width:768px){
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: auto;
+    text-align: center;
+    top:80px;
+    min-height: auto;
+
+}
 `;
 
 const MainHeadingSection = styled.div`
 align-self: flex-start;
 padding-top: 20px;
 width: 40%;
+@media(max-width:768px){
+    margin-bottom: 80px;
+    width: 100%;
+}
 `;
 
 const Heading  = styled.h1`
 font-size: 48px;
 font-family: poppins;
+
+
+@media(max-width:768px){
+    font-size: 32px;
+}
 `;
 
 const LoginButton = styled.a`
@@ -69,14 +91,29 @@ transition: all 0.2s ease 0s;
     color: #34529e;
     border-color: #34529e;
 }
+
+@media(max-width:768px){
+    width:240px;
+    font-size: 15px;
+
+}
 `;
 
 const ImgSection = styled.div`
 width:50%;
+@media(max-width:768px){
+   margin-top: 20px;
+
+}
+
+
 `;
 const CurrencyImg = styled.img`
 width: 580px;
+@media(max-width:768px){
+    width:250px;
 
+}
 `;
 
 export default Home

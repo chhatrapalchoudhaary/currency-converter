@@ -1,9 +1,10 @@
 import styled from 'styled-components';
-import { useEffect } from "react";
+import { useState,useEffect } from "react";
 import {useDispatch,useSelector} from 'react-redux';
 import { useHistory } from "react-router-dom";
 import { auth, provider } from "../firebase";
 import { selectUserName,setUserLoginDetails,setSignOutState } from "../features/user/userSlice";
+
 
 
 const Header = (props) => {
@@ -38,6 +39,10 @@ const Header = (props) => {
         
     };
 
+    const handleNormalLogin = () =>{
+        localStorage.setItem("isLoggedIn",false);
+        history.push("/")
+    }
     const setUser = (user) => {
         dispatch(setUserLoginDetails({
             name: user.displayName,
@@ -46,10 +51,15 @@ const Header = (props) => {
         }))
     }
 
+    const logoClicked = () => {
+        history.push('/');
+        
+    }
+
     
     return(
         <Nav>
-            <Logo><img src="/images/logo.png" alt="logo"/></Logo>
+            <Logo><img src="/images/logo.png" onClick={logoClicked} alt="logo"/></Logo>
            
         <NavMenu>
             <a href="/">
@@ -81,7 +91,6 @@ height: 70px;
 background-color: #2e418f;
 display: flex;
 justify-content: space-between;
-
 align-items: center;
 padding: 0 30px;
 flex-direction: row;
@@ -98,6 +107,11 @@ display: inline-block;
 img{
 display: block;
 width: 100%;
+cursor: pointer;
+
+&:hover{
+    transform:scale(1.05)
+}
 }
 `;
 

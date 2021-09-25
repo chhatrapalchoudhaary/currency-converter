@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 const getStorageValue=(key, defaultValue)=> {
   const saved = localStorage.getItem(key);
   const initial = JSON.parse(saved);
-  return initial || defaultValue;
+  return initial || "login successfully";
 }
 
 export const useLocalStorage = (key, defaultValue) => {

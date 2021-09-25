@@ -1,8 +1,11 @@
 import styled from 'styled-components';
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Signup from './Signup';
 
 const CurrencyConverter = (props) => {
+
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
     const [initialState, setState] = useState({
       currencies: ["USD", "SGD", "PHP", "EUR", "INR", "NZD", "AED"],
       base: "USD",
@@ -62,6 +65,8 @@ useEffect(() => {
     });
   };
     return(
+        isLoggedIn?
+        <> 
         <Container>
             <Wrapper>
                 <Title>Currency Converter</Title>
@@ -132,11 +137,12 @@ useEffect(() => {
                 </Card>
             </Wrapper>
         </Container>
+        </> :
+        <Signup/>
     )
 }
 
 const Container = styled.main`
-
 position: relative;
 min-height: calc(100vh-250px);
 overflow-x: hidden;
@@ -155,6 +161,12 @@ padding: 0 calc(3.5vw + 15px);
     inset: 0px;
     opacity: 1;
     z-index:-1;
+}
+@media(max-width:768px){
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 `;
 
@@ -175,6 +187,12 @@ const Title = styled.h1`
     color: #2e418f;
     font-family: Poppins;
     line-height: 0px;
+
+    
+@media(max-width:768px){
+    font-size: 28px;
+    padding-top: 20px;
+}
 `;
 const SubHeading = styled.p`
     font-size: 22px;
@@ -211,7 +229,19 @@ const Content = styled.div`
 display: flex;
 flex-direction: row;
 justify-content: center;
-align-items: center;`;
+align-items: center;
+text-align: center;
+
+
+@media(max-width:768px){
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+
+}
+
+`;
+
 
 const Form = styled.form`
  margin: 30px 40px;
@@ -227,6 +257,16 @@ outline: none;
 border-color: #2e418f;
 border-radius: 2px;
 border:1px solid #2e418f;
+margin-bottom: 20px;
+
+@media(max-width:768px){
+    margin-bottom: 10px;
+    width: 240px;
+    height: 30px;
+    font-size: 16px;
+    
+}
+
 
 `;
 
@@ -241,6 +281,13 @@ border:1px solid #2e418f;
 
 &:active{
     border-color: #5e438f;
+}
+
+@media(max-width:768px){
+    margin-bottom: 10px;
+    height: 40px;
+    padding:5px;
+    font-size: 14px;
 }
 `;
 

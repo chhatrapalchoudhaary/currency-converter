@@ -5,11 +5,38 @@ import {useDispatch,useSelector} from 'react-redux';
 import { useHistory } from "react-router-dom";
 import { auth, provider } from "../firebase";
 import { selectUserName,setUserLoginDetails,setSignOutState } from "../features/user/userSlice";
-import { useLocalStorage } from "../features/user/useLocalStorage";
+
+
 
 
 const Login = (props) =>{
-    const [email, setEmail] = useLocalStorage("signupemail", "");
+
+    const [emaillog, setEmaillog] = useState("");
+    const [passwordlog, setPasswordlog] = useState("");
+    const [flag, setFlag] = useState(false);
+    const [home, setHome] = useState(true);
+    const [loggedin, setLoggedIn] = useState(false);
+
+
+    const handleLogin=(e) =>{
+        e.preventDefault();
+        let pass = localStorage.getItem('SubmissionPassword').replace(/"/g, "");
+        let mail = localStorage.getItem('SubmissionEmail').replace(/"/g, "");
+        // .replace(/"/g,"") is used to remove the double quotes for the string
+
+        if (!emaillog || !passwordlog) {
+            setFlag(true);
+            console.log("EMPTY");
+        } else if ((passwordlog !== pass) || (emaillog !== mail)) {
+            setFlag(true);
+        } else {
+            history.push('/converter')
+            setHome(!home);
+            setFlag(false);
+            setLoggedIn(true);
+            localStorage.setItem("isLoggedIn",true);
+        }
+    }
 
 
     const dispatch = useDispatch()
@@ -21,6 +48,7 @@ const Login = (props) =>{
             if(user){
                 setUser(user)
                 history.push('/converter')
+                localStorage.setItem("isLoggedIn",true);
             }
         })
     }, {userName});
@@ -50,77 +78,46 @@ const Login = (props) =>{
         }))
     }
     return(
-        <Container>
-        <LoginCard>
-        <Wrapper>
-            <Form>
-                <Heading>Welcome Back!</Heading>
+    
+        <div>
+            <Heading>Welcome Back!</Heading>
                 <SubHeading>New to Currency Conversion App?<a href="/signup"><Span>Signup</Span></a> </SubHeading>
+            <Form onSubmit={handleLogin}>
                 <Input
                     type="email"
                     name="email"
                     placeholder="Your Email Address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={emaillog}
+                    onChange={(event) => setEmaillog(event.target.value)}
+                    
+                />
+                <Input
+                    type="password"
+                    name="password"
+                    placeholder="Your Password"
+                    value={passwordlog}
+                    onChange={(event) => setPasswordlog(event.target.value)}
                     
                 />
                 <Button>Login</Button>
-                <SubHeading>Forgot Password</SubHeading>
+                <SubHeading><a href="/forgot-password"><Span>Forgot Password</Span></a> </SubHeading>
+                {flag && <Error>
+                            Fill correct Info else keep trying.
+                        </Error>}
                 <SubHeading>Or Login With</SubHeading>
                 
             </Form>
-            <GoogleLogin onClick={handleAuth}>
-                    <FcGoogle/>
-            </GoogleLogin>
-        </Wrapper>
-        
-    </LoginCard>
-    <ImgSection>
-            <LoginImg src="/images/login-bro.svg" alt="currency-converter"/>
-            </ImgSection>
-    </Container>
+            </div>
     )
 }
 
 
-const Container = styled.main`
-position: relative;
-min-height: calc(100vh-250px);
-overflow-x: hidden;
-display: flex;
-flex-direction: row;
-justify-content: space-around;
-align-items: center;
-top: 72px;
-padding: 0 calc(3.5vw + 5px);
-
-
-&:after{
-    background-color: #f5f5f5;
-    content: ' ';
-    position: absolute;
-    inset: 0px;
-    opacity: 1;
-    z-index:-1;
-}
-`;
-
 const Span = styled.span`
 color:blue;`;
 
-
-const LoginCard = styled.div`
-
-background-color: #ffffff;
-border-radius: 8px;
-box-shadow: rgb(0 0 0 / 69%) 0px 16px 10px -20px,rgb(0 0 0 / 45%) 0px 16px 10px -20px;
-cursor: pointer;
-display: flex;
-flex-direction: row;
-justify-content: center;
-align-items: center;
-padding-top: 20px;
-width: 40%;
+const Error = styled.p`
+ font-size: 14px;
+ color: red;
 `;
 
 const Heading = styled.h2`
@@ -131,16 +128,6 @@ font-weight:700;
 const SubHeading = styled.p`
 font-size:14px;
 
-`;
-
-
-const Wrapper = styled.section`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
 `;
 
 const Form = styled.form`
@@ -192,33 +179,5 @@ const Button = styled.button`
   }
 `;
 
-const GoogleLogin = styled.button`
-
-width: 200px;
-padding: 5px 8px;
-  background: #ffffff;
-  border: 1px solid #34529e;
-  border-radius: 3px;
-  font-size: 22px;
-  cursor: pointer;
-  margin-top: 0.6rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease-out;
-  margin-bottom: 0.9rem;
-  :hover {
-    background-color:#34529e;
-    color:#ffffff;
-    animation: all 0.2s ease-out forwards;
-  }
-`;
-
-
-const ImgSection = styled.div`
-width:40%;
-`;
-const LoginImg = styled.img`
-width: 500px;
-
-`;
 
 export default Login
